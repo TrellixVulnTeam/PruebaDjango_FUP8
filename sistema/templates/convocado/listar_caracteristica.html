@@ -1,0 +1,102 @@
+{% extends 'index/menu.html' %}
+{% load staticfiles %}
+{% block content %}
+<script language="JavaScript">
+function muestra(id){
+     var elDiv = document.getElementById(id); //se define la variable "elDiv" igual a nuestro div
+     elDiv.style.display='block';//damos un atributo display:block que  el div
+         
+    }
+
+</script>
+<fieldset>
+<center><a href="/perfil/">[Regresar]</a></center>
+<h3><legend class="class-legend"> <p >{{item.numeracion}}.{{item.item}} &nbsp&nbsp  <label  class="label label-warning">Máximo <span class="badge">{{item.valor_max}}</span></label>&nbsp&nbsp<label  class="label label-info">Alcanzado <span class="badge">{{sumaPorItem}}</span></label></p></legend> </h3>
+</fieldset>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Caracteristica</th>
+        <th>Máximo</th>
+        <th>Alcanzado</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for caract in caracteristica %}
+    <div id="{{caract.id}}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                       <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                              <a data-dismiss="modal" class="close">×</a>
+                              <h3>Subir Evidencia </h3>
+                           </div>
+                           <div class="modal-body">
+                           <form class="form-horizontal" role="form" action="/registrarEvidencia/" method="POST" enctype="multipart/form-data">
+                           {% csrf_token %}
+                              <div class="form-group">     
+                                    <label class="control-label control-label-form control-width">Cargo/Rol </label>
+                                    <div>
+                                        <input type="text" name="cargo_rol" class="form-control" placeholder="Cargo/Rol" required maxlength="50">
+                                    </div>
+                                    <label class="control-label control-label-form control-width">Tipo Evidencia</label>
+                                    <div >                                        
+                                        <select name="tipo_evidencia" class="form-control" required>
+                                            <option value="">--Seleccione--</option>
+                                            {% for tipo in tipo_evid %}
+                                            <option value="{{ tipo.id }}">{{ tipo.nombre }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <label class="control-label control-label-form control-width">Numero Evidencia </label>
+                                    <div>
+                                        <input type="text" name="numero_evidencia" class="form-control" placeholder="Numero evidencia" required maxlength="20">
+                                        <input type="hidden" name="item" value="{{item.id}}">
+                                    </div>
+                                    {% if caract.factor %}
+                                    <label class="control-label control-label-form control-width">Numero de {{caract.factor}}</label>
+                                    <div>
+                                        <input type="text" name="tiempo" class="form-control" placeholder="Numero de {{caract.factor}}" maxlength="2">
+                                    </div>
+                                    {% else %}
+                                     <input type="hidden" name="tiempo" class="form-control" maxlength="20">
+                                     {% endif %}
+  
+
+                                    <div class="form-group">
+                                      <label class="control-label control-label-form control-width">Adjuntar evidencia </label>
+                                        <input type="file" name="evidencia">
+                                          <p class="help-block">Sólo formatos .jpg</p>
+                                        <input type="hidden" name="caracteristica" value="{{ caract.id }}">
+                                       
+                                    </div>
+                                </div> 
+                                <div class="form-inline text-center">
+                                    <div>
+                                        <button class="form-control btn-inicio"  type="submit" >Registrar</button>
+                                        <a href="" class="form-control btn-inicio">Cancelar</a>
+                                    </div>
+                                </div>
+                          </form>           
+                          </div>
+                       </div> 
+                      </div>
+                  </div>
+      <tr>
+      <script>
+        contarEvidencia({{request.session.convocado}},{{caract.id}});
+        puntajeCaracteristica({{request.session.convocado}},{{caract.id}});
+        valorMaxCaracteristica({{request.session.convocado}},{{caract.id}})
+      </script>
+        <td>{{item.numeracion}}.{{caract.numeracion}}</td>
+        <td>{{caract.caracteristica}}</td>
+        <td><span class="label label-primary" id="vm{{caract.id}}"></span></td>
+        <td id="p{{caract.id}}"> </td>
+        <td><span class="label label-warning" id="e{{caract.id}}"></span>&nbsp <a href="#{{caract.id}}" data-toggle="modal"><img src="{% static 'img/archivo.png' %}" width="25" height="25" /></a>&nbsp<a href="/listarEvidencia/{{caract.id}}/"><img src="{% static 'img/view.png' %}" width="25" height="25" /></a>
+      </tr>
+      </tr>
+     {% endfor %} 
+    </tbody>
+  </table>
+
+{% endblock %}   

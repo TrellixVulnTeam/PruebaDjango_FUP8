@@ -1,0 +1,118 @@
+{% extends 'index/menu.html' %}
+{% block content %}
+<script language="JavaScript">
+
+ function oculta(id,caja){
+     var elDiv = document.getElementById(id); //se define la variable "elDiv" igual a nuestro div
+      elDiv.style.display='none'; //damos un atributo display:none que oculta el div  
+      alex = document.getElementById(caja);
+      alex.value = "";
+    }
+
+function muestra(id){
+     var elDiv = document.getElementById(id); //se define la variable "elDiv" igual a nuestro div
+     elDiv.style.display='block';//damos un atributo display:block que  el div
+         
+    }
+</script>
+<div> <center><a href="{% url 'item-conv' rubro conv %}" class="btn btn-default btn-lg active" role="button">Regresar</a></center></div>
+<fieldset class="scheduler-border">
+        <legend class="scheduler-border">  {{item.nombre}}</legend> 
+               <div class="table-responsive">
+                  <table class="table">
+                      <form action="" method="post" role="form" name="form">
+                      {% csrf_token %}
+                      <tbody>
+                      <tr> 
+                          <th><label>Caracteristica</label>{{form.caracteristica}}</th>
+                          <th><label class="radio-inline"> Valor Maximo <input type="radio" name="radio" onClick="muestra('oculto'),oculta('oculto2','id_puntaje')">Si</label></th>
+                          <th><label class="radio-inline"><input type="radio" name="radio" value="no" onClick="muestra('oculto2'),oculta('oculto','id_valor_max')">No</label></th>
+                         
+
+                      </tr> 
+                      <tr id='oculto' style='display:none;'>
+                          <th><label>Valor maximo</label>{{form.valor_max}}</th>
+                      </tr>
+
+                        {% if caract.valor_max %}
+                         <script languaje="JavaScript"> 
+                          muestra('oculto');
+                          oculta('oculto2','id_puntaje');
+                          </script>
+                          
+                         {% endif %}  
+                     
+                      <tr id='oculto2' style='display:none;'>
+                          <th><label>Puntaje</label>{{form.puntaje}}<label class="radio-inline"><input type="radio" name="cantidad" value="1">Cantidad</label></th>
+                      </tr>
+
+                      {% if caract.puntaje %}
+                         <script languaje="JavaScript"> 
+                          muestra('oculto2');
+                          oculta('oculto','id_valor_max');
+                          </script>
+                          
+                         {% endif %}
+                      
+                      <tr><td><button type="submit" class="btn btn-primary btn-xs">Agregar</button></td></tr>  
+                        
+                      </tbody>
+                      </form>
+                  </table>
+                </div>
+
+
+                <div class="table-responsive">
+                  <table class="table">
+
+                      <tbody>
+                          <th><label></label></th>
+                          <th><label> Item</label></th>
+                          <th><label> Max</label></th>
+                          <th><label> Puntos</label></th>
+                          <th><label></label></th>
+                          
+                       {% for c in caracteristica %}
+
+                        <tr>
+                       <div id="{{c.id}}" class="modal hide fade in" style="display: none;">
+                          <div class="modal-header">
+                              <a data-dismiss="modal" class="close">×</a>
+                              <h3>Item</h3>
+                           </div>
+                           <div class="modal-body">
+                              <p>Está seguro que desea eliminar : <br>"<b>{{c.caracteristica}}" </b><br><br></p>
+                              
+                          </div>
+                          <div class="modal-footer">
+                               <a href="/eliminarCaractConv/{{c.id}}/"class="btn btn-success" name="{{i.id}}">Eliminar</a>
+                              <a href="#" data-dismiss="modal" class="btn">Cerrar</a>
+                          </div>
+                      </div>
+                    </tr>
+
+      
+                          <tr>
+                            <td class="active"> </td>
+    
+                            <td class="active" width="650"><p>  <a href="#">{{c.caracteristica}}</a></p> </td>
+                             <td class="active"> {{c.valor_max}}</td>
+                             <td class="active"> {{c.puntaje}}</td>
+                             {% if c.cantidad == "1" %}
+                             <td> <span class="glyphicon glyphicon-ok">1</span></td>
+                             
+                            {% endif %}
+                            <td class="active"><a href="/editarCaractConv/{{c.id}}/" id="link"><img src="{{BASE_DIR}}/static/img/edit.png" width="20" height="20"></a><a data-toggle="modal" href="#{{c.id}}">&nbsp;&nbsp<img src="{{BASE_DIR}}/static/img/delete.png" width="20" height="20" ></a></td>
+                          </tr>
+                          {% endfor %}
+                      </tbody>
+  
+                  </table>
+                </div>
+
+            </div>
+                    
+</fieldset>
+
+
+{% endblock %}   

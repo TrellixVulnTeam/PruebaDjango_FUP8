@@ -1,0 +1,35 @@
+{% extends 'index/menu.html' %}
+{% block content %}
+
+
+<fieldset class="scheduler-border">
+                    <legend class="scheduler-border">Evaluación</legend>
+                   
+                          <form method="post" role="form">
+
+                          		{% csrf_token %}
+                         <div class="form-group">
+                    		<label for="InputName">Periodo</label>
+                    		<div class="input-group">
+                        		<input type="text" class="form-control" name="nombre" id="InputName" placeholder="Enter Name" required>
+                        		<span class="input-group-addon "><span class="glyphicon glyphicon-asterisk"></span></span>
+                    		</div>
+                        <label for="InputName">Fecha Inicio</label>
+                        <div>
+                          <input id="date" type="date" class="form-control" required>
+                        </div>
+                        <label for="InputName">Fecha Termino</label>
+                        <div>
+                          <input id="date" type="date" class="form-control" required>
+                        </div>
+                		</div>
+                		<div class="input-group">
+                			<input type="submit" name="submit" id="submit" value="Submit" class="btn btn-info pull-right">
+                		</div>
+                 </form>
+                    
+              </fieldset>
+</div>
+<div class="col-md-2"></div>
+</div>
+{% endblock %}   

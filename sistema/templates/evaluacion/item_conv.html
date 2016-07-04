@@ -1,0 +1,148 @@
+{% extends 'index/menu.html' %}
+{% block content %}
+<div> <center><a href="{% url 'config-convocatoria' conv  %}">[Regresar]</a></center></div>
+<fieldset class="scheduler-border">
+        <legend class="scheduler-border"><center> <p class="text-muted bg-success">  {{rubro.rubro}} </p></center></legend>
+
+              <div class="modal fade" id="item" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                <form action="/crearItem/" method="POST">
+                {% csrf_token %}
+                  <div class="modal-content">
+                        <div class="modal-header">
+                            <a class="close" data-dismiss="modal">×</a>
+                              <h3>Crear Item</h3>
+                        </div>
+                  <div class="modal-body">
+                        <label for="InputName">Nombre</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="item" id="InputName" placeholder="Nombre de Item" required>
+                            <input type="hidden" name="rubro" value="{{rubro.rubro_id}}">
+                            <input type="hidden" name="conv" value="{{conv}}">
+                            <span class="input-group-addon "><span class="glyphicon glyphicon-asterisk"></span></span>
+                        </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="submit" class="btn btn-success" >Crear</button>
+                    <a href="#" class="btn" data-dismiss="modal">Cerrar</a>
+                  </div>
+                </div>
+                </form>
+                </div>
+              </div>
+              <nav class="nav-bottom">
+                <form  class="form-horizontal" action="" method="POST">
+                  {% csrf_token %}
+                    <div class="row col-md-12 col-lg-12">
+                        <div class="box box-info-login">
+                            <div class="box-header">
+
+                              <div class="form-group">
+                                <label class="control-label col-md-2 control-label-form control-width"><p class="text-info">Registrar Iten :</p></label>
+
+                                <div class="col-md-7">
+                                <select name="item" class="form-control" required>
+                                  <option value="">--Seleccione--</option>
+                                  {% for i in items %}
+                                    {% if i.id == item_pk.item_id %} 
+                                      <option value="{{i.id}}" selected>{{i.nombre}}</option>
+                                      {% else %} 
+                                      <option value="{{i.id}}" >{{i.nombre}}</option>
+                                    {% endif %} 
+                                  {% endfor %}                 
+                                </select>
+                                </div>
+                                <div class="col-md-2 left">
+                                  <a  data-toggle="modal" href="#item" ><img src="{{BASE_DIR}}/static/img/addd.png" width="20" height="20" ></a>
+                                </div>
+                              </div>
+
+                              <div class="form-group">
+                                <label class="control-label col-md-2 control-label-form control-width"><p class="text-info">Registrar Valor Máximo :</p></label>
+                                <div class="col-md-2"> 
+                                 <input type="text" name="valor_max" value="{{item_pk.valor_max}}" class="form-control" placeholder="valor" maxlength="3" required >
+                                 </div> 
+                                
+                                <label class="control-label col-md-2 control-label-form control-width"><p class="text-info">Numeracion :</p></label>
+                                <div class="col-md-1">
+                                <input type="text" name="numeracion" value="{{item_pk.numeracion}}" class="form-control" placeholder="num" maxlength="2" required >
+                                </div>
+                              </div>
+                              <fieldset>
+                                    <legend class="class-legend"></legend>
+                              </fieldset>
+                              <div class="form-inline text-center">
+                                    <div>
+                                        <button class="btn btn-success"  type="submit">Registrar</button>
+                                        <a href="" class="btn btn-success">Cancelar</a>
+                                    </div>
+                                </div>
+                            </div>   
+                        </div>   
+                   </div>
+                </form>
+              </nav>
+</div>
+                <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Lista de Item</h3>
+                </div>
+                <div class="panel-body">
+                <div class="table-responsive">
+                  <table class="table table-striped">
+                      <thead>
+                      
+                          <th><label>#</label></th>
+                          <th><label> Item</label></th>
+                          <th><label> Puntos</label></th>
+                      </thead>   
+                       {% for i in item %}
+
+                    <div id="{{i.id}}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                       <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                              <a data-dismiss="modal" class="close">×</a>
+                              <h3>Item</h3>
+                           </div>
+                           <div class="modal-body">
+                              <p>Está seguro que desea eliminar : <br>"<b>{{i.item}}" </b><br><br></p>
+                              <p><h5>Recuerda que se eliminara las caracteristicas pertenecientes a este item</h5></p>             
+                          </div>
+                          <div class="modal-footer">
+                               <a href="/eliminarItemConv/{{i.id}}/{{conv}}/"class="btn btn-success" name="{{i.id}}">Eliminar</a>
+                              <a href="#" data-dismiss="modal" class="btn">Cerrar</a>
+                          </div>
+                       </div> 
+                      </div>
+                  </div>
+                    
+                      <tbody>
+                          <tr>
+                            <td class="active">{{i.numeracion}} </td>
+    
+                            <td class="active"><p><a href="/caracteristicaConv/{{i.item_id}}/{{rubro.id}}" id="link">{{i.item}}</a></p></td>
+                             <td class="active"> {{i.valor_max}}</td>
+                             <td class="active"> <a href="/editarItemConv/{{i.id}}/{{conv}}/" ><img src="{{BASE_DIR}}/static/img/edit.png" width="20" height="20"></a><a data-toggle="modal" href="#{{i.id}}" >&nbsp;&nbsp<img src="{{BASE_DIR}}/static/img/delete.png" width="20" height="20" ></a></td>
+
+                          </tr>
+                          {% endfor %}
+                      </tbody>
+  
+                  </table>
+                </div>
+                </div>
+              </div>
+                    
+</fieldset>
+
+<script type="text/javascript">
+function mostrar(){
+document.getElementById('oculto').style.display = 'block';}
+</script>
+<script type="text/javascript">
+function mostrar2(){
+document.getElementById('oculto2').style.display = 'block';}
+</script>
+
+{% endblock %}   

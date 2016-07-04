@@ -1,0 +1,9 @@
+<option value="">--Seleccione--</option>
+{% for prov in prov %}
+<option value="{{ prov.codDpto }}{{ prov.codProv }}">{{ prov.nombre }}</option>
+{% endfor %}
+
+
+{% for dist in dist %}
+<option value="{{ dist.codDpto }}{{ dist.codProv }}{{ dist.codDist }}">{{ dist.nombre }}</option>
+{% endfor %}

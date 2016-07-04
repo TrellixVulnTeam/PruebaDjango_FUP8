@@ -1,0 +1,188 @@
+{% extends 'index/menu.html' %}
+{% block content %}
+
+
+<script language="JavaScript">
+
+ function oculta(id,caja1,caja2){
+     var elDiv = document.getElementById(id); //se define la variable "elDiv" igual a nuestro div
+      elDiv.style.display='none'; //damos un atributo display:none que oculta el div  
+      alex = document.getElementById(caja1);
+      alex.value = "";
+      alex2 = document.getElementById(caja2);
+      alex2.value = "";
+    }
+
+function muestra(id){
+     var elDiv = document.getElementById(id); //se define la variable "elDiv" igual a nuestro div
+     elDiv.style.display='block';//damos un atributo display:block que  el div
+         
+    }
+
+</script>
+        <fieldset class="scheduler-border">
+        <legend class="scheduler-border"><center> <p class="text-muted bg-success">Evaluación Periodo {{convocatoria.periodo}}</p></center></legend>
+        </fieldset>
+
+                <div class="modal fade" id="rubro" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                <form action="/crearRubro/" method="POST">
+                {% csrf_token %}
+                  <div class="modal-content">
+                        <div class="modal-header">
+                            <a class="close" data-dismiss="modal">×</a>
+                              <h3>Crear Rubro</h3>
+                        </div>
+                  <div class="modal-body">
+                        <label for="InputName">Nombre</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="rubro" id="InputName" placeholder="Nombre de Rubro" required>
+                            <input type="hidden" name="conv" value="{{convocatoria.id}}">
+                            <span class="input-group-addon "><span class="glyphicon glyphicon-asterisk"></span></span>
+                        </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="submit" class="btn btn-success" >Crear</button>
+                    <a href="#" class="btn" data-dismiss="modal">Cerrar</a>
+                  </div>
+              </div>
+              </form>
+              </div>
+              </div>
+
+
+
+              <div class="row col-md-12 col-lg-12">
+                        <div class="box box-info-login">
+                            <div class="box-header">                                
+                                <div class="form-group">                                    
+                                    <label class="control-label col-md-2 control-label-form control-width"><p class="text-info"><strong>Configuración : </strong></p>
+                                    </label>
+                                    <label class="radio-inline control-label col-md-2 control-label-form control-width">
+                                      <input type="radio" name="radio"  onClick="muestra('oculto1'),oculta('oculto2','id_convocatoria','')" value="0">
+                                        Crear
+                                    </label>
+
+                                    {% if not rubro %}
+                                      <label class="radio-inline control-label col-md-2 control-label-form control-width">
+                                        <input type="radio" name="radio"  onClick="muestra('oculto2'),oculta('oculto1','id_rubro','id_peso')" value="1">
+                                        Importar
+                                      </label>
+                                      {% endif %} 
+                                </div>
+
+                              </div>
+                        </div>
+              </div>
+                
+              <div class="row col-md-12 col-lg-12" id='oculto1' style='display:none;'>
+                  <form action="" method="POST" role="form">
+                  {% csrf_token %}
+                  <div class="form-group">
+                    <label class="control-label col-md-2 control-label-form control-width"><p class="text-info">Registrar Rubro :</p></label>
+                    <div class="col-md-3">                                        
+                      <select name="estado_civil" class="form-control" required>
+                          <option value="">--Seleccione--</option>
+                          {% for rub in rubros %}
+                          <option value="{{rub.id}}">{{rub.nombre}}</option>
+                           {% endfor %}                 
+                      </select>
+                        
+                    </div>
+                    <a class="col-md-2" data-toggle="modal" href="#rubro" >&nbsp;&nbsp<img src="{{BASE_DIR}}/static/img/addd.png" width="20" height="20" ></a>
+                  </div>
+                  <div class="form-group">
+                    <label class="control-label col-md-2 control-label-form control-width">Registrar peso :</label>
+                    <div class="col-md-2"> 
+                    <input type="text" name="peso" class="form-control" placeholder="peso Rubro" required >
+                    </div>
+                    <label class="control-label col-md-2 control-label-form control-width"><p class="text-info"><strong>Numeración :</strong></p></label>
+                    <div class="col-md-1">
+                    <input type="text" name="numeracion" class="form-control" placeholder="" required >
+                    &nbsp<button type="submit" class="btn btn-primary btn-xs">+</button></div>
+                  </div>
+                  </form>
+              </div>
+
+              {% if rubro %}
+                <script languaje="JavaScript"> 
+                  muestra('oculto1');
+                  oculta('oculto2','id_convocatoria','');
+                </script>
+              {% endif %}
+              {% if not rubro %}
+                <form  action="/alex/"  method="POST" role="form">
+                <div class="form-group" id='oculto2' style='display:none;'>
+                      {% csrf_token %}
+                  
+                    <label class="control-label col-md-2 control-label-form control-width">Periodo :</label>
+                    <input type="hidden" value="{{convocatoria.id}}" name="id_nuev_con"></input>
+                    <div class="col-md-3"> 
+                        <select onchange="this.form.submit()"  name="id_imp_conv" class="form-control" >
+                          <option value="">--------</option>
+                            {% for c in convocatorias%}
+                          <option value="{{c.id}}">{{c.periodo}}</option>
+                            {% endfor %}
+                        </select>
+                        
+                    </div>
+                  </div>
+                </form>
+              {% endif %} 
+
+           </div>
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Lista de Rubros</h3>
+                </div>
+                <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+
+                        <thead>
+                        <th>#</th>
+                        <th>Nombre</th>
+                        <th>Peso</th>
+                                   
+                        </thead>
+                        <tbody>
+                        {% for r in rubro %}
+
+                        <div class="modal fade" id="{{r.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                  <a class="close" data-dismiss="modal">×</a>
+                                    <h3>Rubro</h3>
+                                </div>
+                              <div class="modal-body">
+                                  <p>Está seguro que desea eliminar : <br>"<b>{{r.rubro}}"</b><br><br></p>
+                                  <p><h5>Recuerda que se eliminara los item y caracteristica pertenecientes a este rubro</h5></p>
+                              </div>
+                              <div class="modal-footer">
+                                <a href="/eliminarRubConv/{{r.id}}/{{convocatoria.id}}/" class="btn btn-success" name="{{r.id}}">Eliminar</a>
+                                <a href="#" class="btn" data-dismiss="modal">Cerrar</a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                            <tr>
+                              <td class="active"> {{ r.id }}</td>
+      
+                              <td class="active"><p><a href="/itemConv/{{r.rubro_id}}/{{convocatoria.id}}" id="link">{{ r.rubro }}</a></p></td>
+                              <td class="active"> {{ r.peso }}%</td>
+                              <td class="active"> <a href="{% url 'editar-rubro-conv' r.id %}" ><img src="{{BASE_DIR}}/static/img/edit.png" width="20" height="20"></a><a data-toggle="modal" href="#{{r.id}}" >&nbsp;&nbsp<img src="{{BASE_DIR}}/static/img/delete.png" width="20" height="20" ></a></td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                    </table>
+                    </div>
+
+                </div>
+            </div>
+
+</div>
+                    
+
+{% endblock %}   

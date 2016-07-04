@@ -1,0 +1,91 @@
+{% extends 'index/menu.html' %}
+{% block content %}
+<fieldset class="scheduler-border">
+        <legend class="scheduler-border"> Evaluacion Periodo {{convocatoria.periodo}}</legend>
+
+            <div class="table-responsive">
+                <table class="table table-hover" width="10%">
+                  <thead>
+                  <tr>
+                    <th> Configuración :</th>
+
+                    <th> 
+                        <label class="radio-inline">
+                          <input type="radio" name="radio"  onClick="muestra('oculto1'),oculta('oculto2','id_convocatoria','')" value="0">
+                          Crear
+                        </label>
+                    </th>
+                  </tr>
+                 
+                    <form action="" method="POST" role="form">
+                      <tr id='oculto1' >
+                      
+                      {% csrf_token %}
+                      <td><label>Actualizar Rubro :</label></td> 
+                      <td>  
+                          {{form.rubro}}<a href="javascript:window.open('/opRubro/','','width= 600,height=300');void(null)" ><img src="{{BASE_DIR}}/static/img/addd.png" width="20" height="20"></a>
+                      </td>
+                      <td>
+                         {{form.peso}}<button type="submit" class="btn btn-primary btn-xs">+</button>
+                      </td>
+                         
+                     
+                      
+                      </tr>
+                      
+                      </form>
+                </thead>
+
+              </table>
+            </div>
+
+                
+
+                <div class="table-responsive">
+                  <table class="table">
+
+                      <tbody>
+                          <th><label></label></th>
+                          <th><label> Rubros</label></th>
+                          <th><label> Peso</label></th>
+                          
+                        {% for r in rubro %}
+                        <tr>
+        
+                <div id="{{r.id}}" class="modal hide fade in" style="display: none;">
+                
+                    <div class="modal-header">
+                        <a data-dismiss="modal" class="close">×</a>
+                        <h3>Rubro</h3>
+                     </div>
+                     
+                     <div class="modal-body">
+                        <p>Está seguro que desea eliminar : <br>"<b>{{r.rubro}}"</b><br><br></p>
+                        <p><h5>Recuerda que se eliminara los item y caracteristica pertenecientes a este rubro</h5></p>
+                                    
+                    </div>
+                    <div class="modal-footer">
+                        <a href="/eliminarRubConv/{{r.id}}/{{convocatoria.id}}/" class="btn btn-success" name="{{r.id}}">Eliminar</button>
+                        <a href="#" data-dismiss="modal" class="btn">Cerrar</a>
+                    </div>
+ 
+                </div>
+                
+                  </tr>
+                          <tr>
+                            <td class="active"> {{ r.id }}</td>
+    
+                            <td class="active"><p><a href="/itemConv/{{r.rubro_id}}/{{convocatoria.id}}" id="link">{{ r.rubro }}</a></p></td>
+                            <td class="active"> {{ r.peso }}%</td>
+                            <td class="active"> <a href="{% url 'editar-rubro-conv' r.id %}" ><img src="{{BASE_DIR}}/static/img/edit.png" width="20" height="20"></a><a data-toggle="modal" href="#{{r.id}}" >&nbsp;&nbsp<img src="{{BASE_DIR}}/static/img/delete.png" width="20" height="20" ></a></td>
+                          </tr>
+                          {% endfor %}
+                      </tbody>
+  
+                  </table>
+                </div>
+                    
+</fieldset>
+{% endblock %}  
+
+

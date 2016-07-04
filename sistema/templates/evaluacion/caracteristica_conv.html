@@ -1,0 +1,307 @@
+{% extends 'index/menu.html' %}
+{% block content %}
+<script language="JavaScript">
+
+ function oculta(id,id_valor_max,id_puntaje_max,id_puntaje_fact,id_factor){
+     var elDiv = document.getElementById(id); //se define la variable "elDiv" igual a nuestro div
+      elDiv.style.display='none'; //damos un atributo display:none que oculta el div  
+      var valor_max = document.getElementById(id_valor_max);
+      var puntaje_max = document.getElementById(id_puntaje_max);
+      var puntaje_fact = document.getElementById(id_puntaje_fact);
+      var factor = document.getElementById(id_factor);
+      valor_max = valor_max.value = ""
+      puntaje_max.value = "";
+      puntaje_fact.value = "";
+      factor.value = "";
+    }
+
+function muestra(id){
+     var elDiv = document.getElementById(id); //se define la variable "elDiv" igual a nuestro div
+     elDiv.style.display='block';//damos un atributo display:block que  el div
+         
+    }
+
+</script>
+<div> <center><a href="{% url 'item-conv' rubro.rubro_id conv %}">[Regresar]</a></center></div>
+<fieldset class="scheduler-border">
+        <legend class="scheduler-border"> <center> <p class="text-muted bg-success">{{item.numeracion}}.{{item.item}}</p></center></legend> 
+</fieldset>
+              <div class="modal fade" id="caract" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                <form action="/crearCaracteristica/" method="POST">
+                {% csrf_token %}
+                  <div class="modal-content">
+                        <div class="modal-header">
+                            <a class="close" data-dismiss="modal">×</a>
+                              <h3>Crear característica</h3>
+                        </div>
+                  <div class="modal-body">
+                        <label for="InputName">Nombre</label>
+                        <div class="input-group">
+                            <textarea class="form-control" rows="8" name="caracteristica" required></textarea>
+                            <input type="hidden" name="item" value="{{item.id}}">
+                            <input type="hidden" name="rubro" value="{{rubro.id}}">
+                            <span class="input-group-addon "><span class="glyphicon glyphicon-asterisk"></span></span>
+                        </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="submit" class="btn btn-success" >Crear</button>
+                    <a href="#" class="btn" data-dismiss="modal">Cerrar</a>
+                  </div>
+                </div>
+                </form>
+                </div>
+              </div>
+
+
+
+            <nav class="nav-bottom">
+                <form  class="form-horizontal" action="" method="POST">
+                {% csrf_token %}
+                    <div class="row col-md-12 col-lg-12">
+                        <div class="box box-info-login">
+                            <div class="box-header">                                
+                                <fieldset>
+                                    <legend class="class-legend"> <p class="text-info"><strong>Registro Característica</strong></p></legend>
+                                </fieldset>
+                                <div class="form-group">                                    
+                                    <label class="control-label col-md-2 control-label-form control-width">Nombre :</label>
+                                    <div class="col-md-7">
+                                        <select name="caracteristica" class="form-control" required>
+                                          <option value="">--Seleccione--</option>
+                                          {% for c in caracteristicas %}
+                                            {% if c.id == caracteristica_pk.caracteristica_id %} 
+                                              <option value="{{c.id}}" selected>{{c.nombre}}</option>
+                                              {% else %} 
+                                              <option value="{{c.id}}" >{{c.nombre}}</option>
+                                            {% endif %} 
+                                          {% endfor %}                 
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2 left">
+                                        <a data-toggle="modal" href="#caract" ><img src="{{BASE_DIR}}/static/img/addd.png" width="20" height="20" ></a>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">    
+                                    <label class="control-label col-md-2 control-label-form control-width">Valor Máximo :</label>
+                                    {% if caract.valor_max %}
+                                    <div class="col-md-1">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="radio" checked onClick="muestra('valor'),oculta('puntaje','id_puntaje_max','id_puntaje_fact','id_factor')" >Si </label>
+                                    </div>
+                                    {% else %}
+                                    <div class="col-md-1">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="radio"  onClick="muestra('valor'),oculta('puntaje','id_puntaje_max','id_puntaje_fact','id_factor')" >Si </label>
+                                    </div>
+                                    {% endif %}
+
+                                    {% if caract.puntaje_fact %}
+
+                                    <div class="col-md-3">
+                                        <label class="radio-inline"><input type="radio" name="radio" value="no"  checked onClick="muestra('puntaje'),oculta('valor','id_valor_max','id_puntaje_max','id_puntaje_fact','id_factor')">No
+                                        </label>
+                                    </div>
+                                    {% else %}  
+                                    <div class="col-md-3">
+                                        <label class="radio-inline"><input type="radio" name="radio" value="no" onClick="muestra('puntaje'),oculta('valor','id_valor_max','id_puntaje_max','id_puntaje_fact','id_factor')">No
+                                        </label>
+                                    </div>  
+                                    {% endif %}
+                                    
+                                </div>
+
+                                <div class="form-group" id='valor' style='display:none;'>                                    
+                                    <label class="control-label col-md-2  control-label-form control-width">Valor_max :</label>
+                                    <div class="col-md-7">
+                                    <input type="text" name="valor_max" value="{{caracteristica_pk.valor_max}}" class="form-control" placeholder="valor" maxlength="3">
+                                    </div>
+                                    
+                                </div>
+                               
+                                {% if caract.valor_max %}
+                                    <script languaje="JavaScript"> 
+                                    muestra('valor');
+                                    
+                                    </script>
+                          
+                                {% endif %}
+                                <div id='puntaje' style='display:none;'>
+                                <div class="form-group">    
+                                    <label class="control-label col-md-2 control-label-form control-width">Puntaje Máximo :</label>
+                                    {% if caract.puntaje_max %}
+                                    <div class="col-md-1">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="radio2" checked onClick="muestra('puntaje_max'),muestra('puntaje_fact'),oculta('','id_puntaje_fact','id_factor')" >Si </label>
+                                    </div>
+                                    {% else %}
+                                    <div class="col-md-1">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="radio2" onClick="muestra('puntaje_max'),muestra('puntaje_fact'),oculta('','id_puntaje_fact','id_factor')" >Si </label>
+                                    </div>
+                                    {% endif %}
+
+                                    {% if caract.puntaje_fact %}
+                                    <div class="col-md-3">
+                                        <label class="radio-inline"><input type="radio" name="radio2" value="no" checked onClick="muestra('puntaje_fact'),oculta('puntaje_max','id_puntaje_max')">No
+                                        </label>
+                                    </div>
+                                    {% else %}
+                                    <div class="col-md-3">
+                                        <label class="radio-inline"><input type="radio" name="radio2" value="no" onClick="muestra('puntaje_fact'),oculta('puntaje_max','id_puntaje_max')">No
+                                        </label>
+                                    </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="form-group" id='puntaje_max' style='display:none;'>                                    
+                                    <label class="control-label col-md-2  control-label-form control-width">puntaje_max :</label>
+                                    <div class="col-md-7">
+                                    <input type="text" name="puntaje_max" value="{{caracteristica.puntaje_max}}" class="form-control" placeholder="puntaje" maxlength="2">
+                                    </div>
+                                    
+                                </div>
+
+                                {% if caract.puntaje_max %}
+                                    <script languaje="JavaScript"> 
+                                    muestra('puntaje_max');
+                                   
+                                    </script>
+                          
+                                {% endif %}
+
+                                <div class="form-group" id='puntaje_fact' style='display:none;'>                                    
+                                    <label class="control-label col-md-2  control-label-form control-width">puntaje :</label>
+                                    <div class="col-md-2">
+                                    <input type="text" name="puntaje_fact" value="{{caracteristica_pk.puntaje_fact}}" class="form-control" placeholder="puntaje factor">
+                                    </div>
+                                    <label class="control-label col-md-2  control-label-form control-width">Factor :</label>
+                                    <div class="col-md-3">
+                                        <select id="id_factor" name="factor" class="form-control">
+                                        <option value="">--------</option>
+                                        {% if caract.factor == "anio"%}
+                                          <option  value="anio" selected >Año</option>
+                                        {% else %}
+                                          <option  value="anio" >Año</option>
+                                        {% endif %} 
+                                        {% if caract.factor == "semestre" %} 
+                                          <option selected value="semestre">Semestre</option>
+                                        {% else %}
+                                        <option value="semestre">Semestre</option>
+                                        {% endif%}
+                                        </select>
+                                    </div>
+                                    
+                                </div>
+
+                                {% if caract.puntaje_fact %}
+                                    <script languaje="JavaScript"> 
+                                    muestra('puntaje_fact');
+                                   
+                                    </script>
+                          
+                                {% endif %}
+
+                                </div>
+
+                                 {% if caract.puntaje_max or caract.puntaje_fact %}
+                                    <script languaje="JavaScript"> 
+                                    muestra('puntaje');
+                                    
+                                    </script>
+                          
+                                {% endif %}
+                                
+                                <div class="form-group">                                    
+                                    <label class="control-label col-md-2  control-label-form control-width">Numeración :</label>
+                                    <div class="col-md-2">
+                                    <input type="text" name="numeracion" value="{{caracteristica_pk.numeracion}}" class="form-control" placeholder="num" maxlength="2" required >
+                                    </div>
+                                    
+                                </div>
+
+                                <fieldset>
+                                    <legend class="class-legend"></legend>
+                                </fieldset>
+                                <div class="form-inline text-center">
+                                    <div>
+                                        <button class="btn btn-success"  type="submit">Registrar</button>
+                                        <a href="" class="btn btn-success">Cancelar</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </nav>
+
+
+              <div class="row">
+                  
+                </div>
+</div>
+      
+                <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Lista de Características</h3>
+                </div>
+                <div class="panel-body">
+                <div class="table-responsive">
+                  <table class="table table-striped">
+
+                      <thead>
+                        
+                          <th><label>#</label></th>
+                          <th><label> Caracteristica</label></th>
+                          <th><label> ValorMax</label></th>
+                          <th><label> PuntajeMax</label></th>
+                          <th><label> Factor</label></th>
+                          <th><label> PuntajeF</label></th>
+                          <th><label></label></th>
+                      </thead>
+                         
+                       {% for c in caracteristica %}
+
+                        
+                       <div id="{{c.id}}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                       <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                              <a data-dismiss="modal" class="close">×</a>
+                              <h3>Caracteristica</h3>
+                           </div>
+                           <div class="modal-body">
+                               <p>Está seguro que desea eliminar : <br>"<b>{{c.caracteristica}}" </b><br><br></p>             
+                          </div>
+                          <div class="modal-footer">
+                               <a href="/eliminarCaractConv/{{c.id}}/"class="btn btn-success">Eliminar</a>
+                              <a href="#" data-dismiss="modal" class="btn">Cerrar</a>
+                          </div>
+                       </div> 
+                      </div>
+                  </div>
+                      <tbody>
+                          <tr>
+                            <td class="active">{{item.numeracion}}.{{c.numeracion}} </td>
+    
+                            <td class="active" width="645"><p>  <a href="#">{{c.caracteristica}}</a></p> </td>
+                             <td class="active"> {{c.valor_max}}</td>
+                             <td class="active"> {{c.puntaje_max}}</td>
+                             <td class="active"> {{c.factor}}</td>
+                             <td class="active"> {{c.puntaje_fact}}</td>
+                             
+                            <td class="active"><a href="/editarCaractConv/{{c.id}}/" id="link"><img src="{{BASE_DIR}}/static/img/edit.png" width="20" height="20"></a><a data-toggle="modal" href="#{{c.id}}">&nbsp;&nbsp<img src="{{BASE_DIR}}/static/img/delete.png" width="20" height="20" ></a></td>
+                          </tr>
+                          {% endfor %}
+                      </tbody>
+  
+                  </table>
+                </div>
+                </div>
+                </div>
+            </div>
+          
+
+
+{% endblock %}   

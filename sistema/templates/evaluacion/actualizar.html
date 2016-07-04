@@ -1,0 +1,23 @@
+{% extends 'index/menu.html' %}
+{% block content %}
+<form action="" method="POST" role="form">
+			<table class="table table-hover" width="10%">
+                      <tr >
+                      
+                      {% csrf_token %}
+                      <td><label>Registrar Rubro :</label></td> 
+                      <td>  
+                          {{form.rubro}}<a href="javascript:window.open('/opRubro/','','width= 600,height=300');void(null)" ><img src="{{BASE_DIR}}/static/img/addd.png" width="20" height="20"></a>
+                      </td>
+                      <td>
+                         {{form.peso}}<button type="submit" class="btn btn-primary btn-xs">+</button>
+                      </td>
+                         
+                     
+                      
+                      </tr>
+            </table>          
+</form>
+{% endblock %}  
+
+

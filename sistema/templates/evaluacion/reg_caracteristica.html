@@ -1,0 +1,23 @@
+{% extends 'index/menu.html' %}
+{% block content %}
+
+<fieldset class="scheduler-border">
+                    <legend class="scheduler-border"> Registrar Caracteristica</legend>
+                   
+                          <form method="post" role="form">
+
+                          		{% csrf_token %}
+                         
+                    		<div class="form-group">
+                          <label for="comment">nombre:</label>
+                          <textarea class="form-control" rows="5" id="comment" name="nombre" required></textarea>
+                        </div>
+                	
+                		<div class="input-group">
+                			<input type="submit" name="submit" id="submit" value="Submit" class="btn btn-info pull-right">
+                		</div>
+                 </form>
+                    
+              </fieldset>
+
+{% endblock %}   

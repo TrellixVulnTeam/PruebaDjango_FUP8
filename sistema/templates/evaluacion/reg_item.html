@@ -1,0 +1,24 @@
+{% extends 'index/menu.html' %}
+{% block content %}
+
+<fieldset class="scheduler-border">
+                    <legend class="scheduler-border"> Registrar Item</legend>
+                   
+                          <form method="post" role="form">
+
+                          		{% csrf_token %}
+                         <div class="form-group">
+                    		<label for="InputName">Nombre</label>
+                    		<div class="input-group">
+                        		<input type="text" class="form-control" name="nombre" id="InputName" placeholder="Enter Name" required>
+                        		<span class="input-group-addon "><span class="glyphicon glyphicon-asterisk"></span></span>
+                    		</div>
+                		</div>
+                		<div class="input-group">
+                			<input type="submit" name="submit" id="submit" value="Submit" class="btn btn-info pull-right">
+                		</div>
+                 </form>
+                    
+              </fieldset>
+
+{% endblock %}   

@@ -1,0 +1,119 @@
+{% extends 'index/menu.html' %}
+{% load staticfiles %}
+{% block content %}
+<fieldset>
+<center><a href="/listarCaracteristica/{{caract.item_conv_id}}/">[Regresar]</a></center>
+<h3><legend class="class-legend"> <p >{{caract.caracteristica}}</p></legend> </h3>
+</fieldset>
+  <div class="table-responsive">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Cargo/Rol</th>
+        <th>Tipo Evidencia/Rol</th>
+        <th>Número Evidencia</th>
+        <th>Evidencia</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for evidencia in evidencia%}
+    <div id="{{evidencia.id}}" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+                       <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                              <a data-dismiss="modal" class="close">×</a>
+                           </div>
+                           <div class="modal-body">
+                            <picture>
+                              <img srcset="{{MEDIA_ROOT}}/media/{{evidencia.evidencia}}" class="img-responsive">
+                            </picture>     
+                          </div>
+                       </div> 
+                      </div>
+                  </div>
+  <div id="e{{evidencia.id}}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                       <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                              <a data-dismiss="modal" class="close">×</a>
+                           </div>
+                           <div class="modal-body">
+                               <p>Está seguro que desea eliminar : <br>"<b>{{evidencia.evidencia}}" </b><br><br></p>             
+                          </div>
+                          <div class="modal-footer">
+                               <a href="/eliminarEvidencia/{{evidencia.id}}/"class="btn btn-success">Eliminar</a>
+                              <a href="#" data-dismiss="modal" class="btn">Cerrar</a>
+                          </div>
+                       </div> 
+                      </div>
+                  </div>
+      <tr>
+        <td></td>
+        <td>{{evidencia.cargo_rol}}</td>
+        <td>{{evidencia.tipo_evidencia}}</td>
+        <td>{{evidencia.numero_evidencia}}</td>
+        <td><a href="{{MEDIA_ROOT}}/media/{{evidencia.evidencia}}">[{{evidencia.evidencia}}]</a></td>
+        <td><span class="label label-success" >{{evidencia.puntaje_calculado}} pts</span>&nbsp;&nbsp
+        <a data-toggle="modal" href="#{{evidencia.id}}"><img src="{% static 'img/view.png' %}" width="25" height="25" /></a>&nbsp
+        <a href="/editarEvidencia/{{evidencia.id}}" id="link"><img src="{% static 'img/edit.png' %}" width="20" height="20"></a><a data-toggle="modal" href="#e{{evidencia.id}}">&nbsp;&nbsp<img src="{% static 'img/delete.png' %}" width="20" height="20" ></a></td>
+       
+      </tr>
+     {% endfor %} 
+    </tbody>
+  </table>
+  </div>
+  <br><br>
+  {% if evidencia_pk %}
+  <form class="form-horizontal" role="form"  method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+    <fieldset>
+      <legend class="class-legend"><p class="text-muted bg-success text-primary">Editar Evidencia</p></legend>
+    </fieldset>
+
+                           
+                           
+                              <div class="form-group">     
+                                    <label class="control-label col-md-3 text-left control-label-form control-width">Cargo/Rol </label>
+                                    <div class="col-md-3 text-left ">
+                                        <input type="text" name="cargo_rol" class="form-control" placeholder="Cargo/Rol" value="{{evidencia_pk.cargo_rol}}" required maxlength="50">
+                                    </div>
+                                    <label class="control-label col-md-3 text-left control-label-form control-width">Tipo Evidencia</label>
+                                    <div class="col-md-3 text-left">                                
+                                        <select name="tipo_evidencia" class="form-control" required>
+                                            <option value="">--Seleccione--</option>
+                                            {% for tipo in tipo_evidencia %}
+                                            {% if evidencia_pk.tipo_evidencia_id == tipo.id %}
+                                            <option value="{{ tipo.id }}" selected="selected">{{ tipo.nombre }}</option>
+                                            {% else %}
+
+                                            <option value="{{ tipo.id }}">{{ tipo.nombre }}</option>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <label class="control-label col-md-3 text-left control-label-form control-width">Numero Evidencia </label>
+                                    <div class="col-md-3 text-left ">
+                                        <input type="text" name="numero_evidencia" value="{{evidencia_pk.numero_evidencia}}" class="form-control" placeholder="Numero evidencia" required maxlength="20">
+                                    </div>
+                                    
+                                </div> 
+                                <div class="form-group">
+                                      <label class="control-label col-md-3 text-left control-label-form control-width">Adjuntar evidencia </label>
+                                      <div class="col-md-3 text-left">
+                                      {% if evidencia_pk.evidencia %}
+                                      Currently: <a href="/media/{{evidencia_pk.evidencia}}">{{evidencia_pk.evidencia}}</a>
+                                      {% endif %}
+                                        <input type="file" name="evidencia">
+                                          <p class="help-block">Sólo fortatos .jpg</p>
+                                      </div>
+                                    </div>
+                                <div class="form-inline text-center">
+                                    <div>
+                                        <button class="btn btn-primary"  type="submit" >Actualizar</button>
+                                        <a href="/listarEvidencia/{{evidencia_pk.caracteristica_conv_id}}" class="btn btn-primary">Cancelar</a>
+                                    </div>
+                                </div>
+</form>           
+{% endif %}
+{% endblock %}

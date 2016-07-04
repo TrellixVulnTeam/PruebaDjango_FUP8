@@ -1,0 +1,35 @@
+{% extends 'index/menu.html' %}
+{% block content %}
+<form action="" method="post">{% csrf_token %}
+ <div id="form-content">
+         <div class="modal-header">
+               <a class="close" data-dismiss="modal">×</a>
+               <h3>Contact us</h3>
+         </div>
+ <div>
+ <form class="contact">
+ <fieldset>
+          <div class="modal-body">
+          <ul class="nav nav-list">
+ <li class="nav-header">Name</li>
+ <li><input class="input-xlarge" value=" krizna" type="text" name="name"></li>
+ <li class="nav-header">Email</li>
+ <li><input class="input-xlarge" value=" user@krizna.com" type="text" name="Email"></li>
+ <li class="nav-header">Message</li>
+ <li><textarea class="input-xlarge" name="sug" rows="3"> Thanks for the article and demo
+ </textarea></li>
+ </ul> 
+         </div>
+ </fieldset>
+ </form>
+ </div>
+      <div class="modal-footer">
+          <button class="btn btn-success" id="submit">submit</button>
+          <a href="#" class="btn" data-dismiss="modal">Close</a>
+   </div>
+ </div>
+    <p>Are you sure you want to delete "{{ object.rubro }}"?</p>
+    <input type="submit" value="Confirm" />
+</form>
+
+{% endblock %} 

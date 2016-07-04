@@ -1,0 +1,405 @@
+{% extends 'index/menu.html' %}
+{% load staticfiles %}
+{% block content %}
+<script type="text/javascript">
+function AgregarFoto(){
+   
+  var extensiones_permitidas = new Array(".gif",".jpg",".jpeg"); 
+  var mierror = ""; 
+  var permitida = false; 
+  var ls_operacion = "N";
+      
+    var objFoto = document.getElementById("theFile");
+    var fotografia= objFoto.value;  
+  
+    var extension = (fotografia.substring(fotografia.lastIndexOf("."))).toLowerCase();
+
+    for (var i = 0; i < extensiones_permitidas.length; i++) { 
+           if (extensiones_permitidas[i] == extension) { 
+           permitida = true; 
+           break; 
+           } 
+        } 
+     if (!permitida) { 
+           mierror = "Comprueba la extensi&oacute;n de la Fotografía. \nSólo se puede subir archivos con extensiones: " + extensiones_permitidas.join();
+           alert (mierror);
+           objFoto.focus();
+             return false;
+           
+         }else{ 
+            //submito! 
+          objForm.submit();
+          return 1; 
+         } 
+}
+
+function guardarPerfil(){
+
+    var extensiones_permitidas = new Array(".gif",".jpg",".jpeg"); 
+    var mierror = ""; 
+    var permitida = false; 
+    var ls_operacion = "N";
+      
+    var objFoto = document.getElementById("theFile");
+    var fotografia= objFoto.value; 
+    var objForm = jQuery("#form_datos");
+ 
+  
+    var extension = (fotografia.substring(fotografia.lastIndexOf("."))).toLowerCase();
+
+    for (var i = 0; i < extensiones_permitidas.length; i++) { 
+           if (extensiones_permitidas[i] == extension) { 
+           permitida = true; 
+           break; 
+           } 
+        } 
+     if (!permitida) { 
+           mierror = "Comprueba la extensi&oacute;n de la Fotografía. \nSólo se puede subir archivos con extensiones: " + extensiones_permitidas.join();
+           alert (mierror);
+           objFoto.focus();
+            return false;
+            valor="0";
+           
+         }else{ 
+            valor ="1";
+            //submito! 
+         // objForm.submit();
+          //return 1; 
+         } 
+
+    //var objFoto = document.getElementById("theFile");
+    //var fotografia= objFoto.value;
+    //var objForm = jQuery("#form_datos");
+    //if (Validarcampovacio(fotografia) == false &&  document.form_datos.valor.value == 0)
+        //{              
+          //  alert("Debe ingresar una fotografía en su perfil para poder guardar los cambios.");
+           // objFoto.focus();
+           // return false;           
+      //  }
+
+
+      console.log("alexlo") 
+      console.log(document.form_datos.dpto.value)                  
+    if(document.form_datos.dpto.value==""){
+        alert("Ingresar Departamento");
+        document.form_datos.dpto.focus();
+        return false;
+        valor="0";
+    }else{ 
+            valor ="1";
+         } 
+
+                         
+    if(document.form_datos.provinces_list1.value==""){
+        alert("Ingresar Provincia");
+        document.form_datos.provincia.focus();
+        return false;
+        valor="0";
+    }else{ 
+            valor ="1";
+         }
+                         
+    if(document.form_datos.districts_list1.value==""){
+        alert("Ingresar Distrito");
+        document.form_datos.distrito.focus();
+        return false;
+        valor="0";
+    }else{ 
+            valor ="1";
+         }
+        
+    if (valor == "1") 
+    {
+        objForm.submit();
+    }                                     
+
+}
+</script>
+
+        <div class="container container_principal">
+            <nav class="nav-bottom">
+            {% if perfil %}
+            <form id="form_datos" class="form-horizontal" action="/editarPerfil/{{perfil.id}}/" method="POST" enctype="multipart/form-data"  name="form_datos">
+            {% else%}
+                  <form id="form_datos" class="form-horizontal" action="/perfil/" method="POST" enctype="multipart/form-data"  name="form_datos">
+            {% endif %}
+                    <div class="row col-md-12 col-lg-9 col-lg-offset-1">
+                            {% csrf_token %}  
+
+                        <ul class="nav nav-tabs">
+                          <li class="active"><a  data-toggle="tab" href="#perfil">Perfil</a></li>
+                          {% if perfil%}
+                          <li><a  data-toggle="tab" href="#evaluacion">Evaluacion</a></li>
+                          {% endif %}
+                        </ul>
+
+                        <div class="tab-content">
+                            <div id="perfil" class="tab-pane fade in active">
+                            <br>
+                            <div class="form-group">     
+                              <div class="col-md-12">
+                                <h4>{{perfil.nombre}} {{perfil.ap_pat}} {{perfil.ap_mat}}</h4>
+                              </div>
+                            </div>
+                            <div class="form-group">     
+                              <div class="col-md-12">
+                                {% if perfil.foto %} 
+                                          <img  src=" {{MEDIA_ROOT}}/media/{{perfil.foto}}"  height="200">
+                                        {% else %}
+                                         <img   src=" {% static 'img/img_avatar.jpg' %}" height="200">
+                                        {% endif %}
+                              </div>
+                            </div>
+                            <div class="form-group">     
+                              <div class="col-md-12">
+                                {% if perfil.foto %}
+                                          Currently: <a href="/media/{{perfil.foto}}">{{perfil.foto}}</a>
+                                        
+                                        <input name="foto" type="file" value="{{perfil.foto}}" class="filestyle" data-buttonName="btn-primary" id="theFile"  size="20"> 
+                                        {% else %}
+                                        <input name="foto" type="file"  class="filestyle" data-buttonName="btn-primary" id="theFile"  size="20" required> 
+                                        {% endif %}
+                              </div>
+                            </div>
+                               
+                                    
+                        <br>
+                                <fieldset>
+                                    <legend class="class-legend"><p class="text-muted bg-success text-primary">Datos Personales</p></legend>
+                                </fieldset>
+                                <div class="form-group">     
+                                    <label class="control-label col-md-3 text-left control-label-form control-width">Nombre </label>
+                                    <div class="col-md-4">
+                                        <input type="text" name="nombre" value="{{perfil.nombre}}" class="form-control" placeholder="Nombres" required maxlength="50">
+                                    </div>
+                                </div>
+                               
+                                <div class="form-group">                                    
+                                    <label class="control-label col-md-3 control-label-form control-width">Apellido Paterno</label>
+                                    <div class="col-md-3">
+                                        <input type="text" name="ap_pat" value="{{perfil.ap_pat}}" class="form-control" placeholder="Ap. Paterno" maxlength="30" required>
+                                    </div>
+                                    <label class="control-label col-md-3 control-label-form control-width">Fecha de Nacimiento</label>
+                                    <div class="col-md-3">                                        
+                                        <input id="date" type="date" name="fecha_nac" value="{{perfil.fecha_nac|date:"Y-m-d"}}" class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">                                    
+                                    <label class="control-label col-md-3 control-label-form control-width">Apellido Materno</label>
+                                    <div class="col-md-3">
+                                        <input type="text" name="ap_mat" value="{{perfil.ap_mat}}" class="form-control" placeholder="Ap. Materno" required maxlength="30">
+                                    </div>
+                                    <label class="control-label col-md-3 control-label-form control-width">Estado Civil</label>
+                                    <div class="col-md-3">                                        
+                                        <select name="estado_civil" class="form-control" required>
+                                            <option value="">--Seleccione--</option>
+                                            {% if perfil.estado_civil == "S" %}
+                                            <option value="S" selected>Soltero</option>
+                                            <option value="C">Casado</option>
+                                            {% else %}
+                                            <option value="S">Soltero</option>
+                                            <option value="C" selected>Casado</option>
+                                            {% endif %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">    
+                                     <label class="control-label col-md-3 control-label-form">N° Documento de Identidad</label>
+                                    <div class="col-md-3">
+                                        <input type="text" name="dni" value="{{perfil.dni}}" class="form-control" placeholder="Número de documento" maxlength="8" required>
+                                    </div>
+                                    <label class="control-label col-md-3 control-label-form">Sexo</label>
+                                    <div class="col-md-3">                                        
+                                        <select name="sexo" class="form-control" required>
+                                            <option value="">--Seleccione--</option>
+                                            {% if perfil.sexo == "M"%}
+                                            <option value="M" selected>Masculino</option>
+                                            <option value="F">Femenino</option>
+                                            {% else %}
+                                            <option value="F" selected>Femenino</option>
+                                            <option value="M">Masculino</option>
+                                            {% endif %}
+                                        </select>
+                                    </div>
+                                </div>
+                                   
+                                    
+                                <div class="form-group">                                    
+                                    <label class="control-label col-md-3 control-label-form control-width">Dirección de Domicilio</label>
+                                    <div class="col-md-9">
+                                        <input type="text" name="direccion" value="{{perfil.direccion}}" class="form-control" placeholder="Dirección de domicilio" maxlength="50" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">                                    
+                                    <label class="control-label col-md-3 control-label-form control-width">Departamento</label>
+                                    <div class="col-md-2">
+                                        <select name="departamento" class="form-control" id="dpto" onchange="buscarProv(this.value);" required="">
+                                            <option value="">--Seleccione--</option>
+                                            
+                                            {% for dpt in dpt %}
+                                            {% if dpt.codDpto == perfil.ubigeo|slice:"0:2" %}
+                                            <option value="{{dpt.codDpto}}" selected>{{dpt.nombre}}</option>
+                                            {% else %}
+                                            <option value="{{dpt.codDpto}}">{{dpt.nombre}}</option>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <label class="control-label col-md-1 control-label-form control-width">Provincia</label>
+                                    <div class="col-md-2">
+                                        {% if perfil %}
+                                        <select name="provincia" class="form-control" id="provinces_list1" onchange="buscarDist(this.value);" required>
+                                        <option value="">--Seleccione--</option>
+                                          {% for prov in provincia %}
+                                            {% if prov.codProv == perfil.ubigeo|slice:"2:4" %}
+                                              <option value="{{ prov.codDpto }}{{ prov.codProv }}" selected>{{ prov.nombre }}</option>
+                                            {% else %}
+                                            <option value="{{ prov.codDpto }}{{ prov.codProv }}">{{ prov.nombre }}</option>
+                                            {% endif %}
+                                          {% endfor %}
+                                        </select>
+                                        {% else %}                                       
+                                        <select name="provincia" class="form-control" id="provinces_list1" onchange="buscarDist(this.value);" required></select>
+                                        {% endif %}
+                                    </div>
+                                    <label class="control-label col-md-1 control-label-form control-width">Distrito</label>
+                                    <div class="col-md-2"> 
+                                    {% if perfil %}
+                                      <select name="ubigeo" class="form-control" id="districts_list1" required>
+                                      <option value="">--Seleccione--</option>
+                                      {% for dist in distrito %}
+                                        {% if dist.codDist == perfil.ubigeo|slice:"4:6" %}
+                                        <option value="{{ dist.codDpto }}{{ dist.codProv }}{{ dist.codDist }}" selected>{{ dist.nombre }}</option>
+                                        {% else %}
+                                        <option value="{{ dist.codDpto }}{{ dist.codProv }}{{ dist.codDist }}">{{ dist.nombre }}</option>
+                                        {% endif %}
+                                      {% endfor %}
+                                      </select>
+                                      {% else %}
+                                      <select name="ubigeo" class="form-control" id="districts_list1" required>
+                                      </select>
+                                      {% endif %}
+                                    </div>
+                                </div>
+                                <fieldset>
+                                    <legend class="class-legend"><p class="text-muted bg-success text-primary">Datos Actuales</p></legend>
+                                </fieldset>
+                                <div class="form-group">                                    
+                                    <label class="control-label col-md-3 control-label-form control-width">Dirección Actual</label>
+                                    <div class="col-md-5">
+                                        <input type="text" name="direccion_act" value="{{perfil.direccion_act}}" class="form-control" placeholder="Dirección Actual" maxlength="50" required>
+                                    </div>
+                                    
+                                </div>
+
+                                <div class="form-group">                                    
+                                    <label class="control-label col-md-3 control-label-form control-width">Telefono</label>
+                                    <div class="col-md-3">
+                                        <input type="text" name="telefono" value="{{perfil.telefono}}" class="form-control" placeholder="Telefono" maxlength="10">
+                                    </div>
+                                    <label class="control-label col-md-3 control-label-form control-width">Celular</label>
+                                    <div class="col-md-3">
+                                        <input type="text" name="celular" value="{{perfil.celular}}" class="form-control" placeholder="Celular" maxlength="10">
+                                    </div>
+                                </div>
+                                <div class="form-group">                                    
+                                    <label class="control-label col-md-3 control-label-form control-width">E-Mail</label>
+                                    <div class="col-md-9">
+                                        <input type="email" name="email" value="{{perfil.email}}" class="form-control" placeholder="Correo Electrónico" maxlength="50">
+                                    </div>
+                                </div>
+                                <div class="form-group">                                    
+                                    <label class="control-label col-md-3 control-label-form control-width">Departamento</label>
+                                    <div class="col-md-2">
+                                        <select name="departamento2" class="form-control"  onchange="buscarProv2(this.value);" required>
+                                            <option value="">--Seleccione--</option>
+                                            {% for dpt in dpt %}
+                                            {% if dpt.codDpto == perfil.ubigeo_act|slice:"0:2" %}
+                                            <option value="{{dpt.codDpto}}" selected>{{dpt.nombre}}</option>
+                                            {% else %}
+                                            <option value="{{dpt.codDpto}}">{{dpt.nombre}}</option>
+                                            {% endif %}
+                                            {% endfor %}
+                                            
+                                        </select>
+
+                                    </div>
+                                    <label class="control-label col-md-1 control-label-form control-width">Provincia</label>
+                                    <div class="col-md-2">
+
+                                    {% if perfil %}
+                                        <select name="provincia2" class="form-control" id="provinces_list2" onchange="buscarDist2(this.value);" required>
+                                        <option value="">--Seleccione--</option>
+                                          {% for prov in provincia2 %}
+                                            {% if prov.codProv == perfil.ubigeo_act|slice:"2:4" %}
+                                              <option value="{{ prov.codDpto }}{{ prov.codProv }}" selected>{{ prov.nombre }}</option>
+                                            {% else %}
+                                            <option value="{{ prov.codDpto }}{{ prov.codProv }}">{{ prov.nombre }}</option>
+                                            {% endif %}
+                                          {% endfor %}
+                                        </select>
+                                        {% else %}                                       
+                                        <select name="provincia2" class="form-control" id="provinces_list2" onchange="buscarDist2(this.value);" required></select>
+                                    {% endif %}
+
+                                        
+                                    </div>
+                                    <label class="control-label col-md-1 control-label-form control-width">Distrito</label>
+                                    <div class="col-md-2">
+                                      {% if perfil %}                                       
+                                      <select name="ubigeo_act" class="form-control" id="districts_list2" required>
+                                      <option value="">--Seleccione--</option>
+                                      {% for dist in distrito2 %}
+                                        {% if dist.codDist == perfil.ubigeo_act|slice:"4:6" %}
+                                        <option value="{{ dist.codDpto }}{{ dist.codProv }}{{ dist.codDist }}" selected>{{ dist.nombre }}</option>
+                                        {% else %}
+                                        <option value="{{ dist.codDpto }}{{ dist.codProv }}{{ dist.codDist }}">{{ dist.nombre }}</option>
+                                        {% endif %}
+                                      {% endfor %}
+                                      </select>
+                                      {% else %}
+                                      <select name="ubigeo_act" class="form-control" id="districts_list2" required>
+                                      </select>
+                                      {% endif %}
+                                    </div>
+                                </div>
+
+
+                                <br>
+                                <div class="form-inline text-center">
+                                    <div>
+                                        <button class="btn btn-success"  type="submit">Registrar</button>
+                                        <a href="" class="btn btn-success">Cancelar</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <br><br>
+                            {% if perfil %}
+                            <div id="evaluacion" class="tab-pane fade">
+                            {% for rub in rubro %}
+                            <div class="navbar-collapse">
+                                <ul class="nav navbar-nav">
+                                    <li class="dropdown2">
+                                      <a href="#" onclick="listarItem({{rub.id}})" class="dropdown-toggle" data-toggle="dropdown">{{rub.rubro}}<span class="glyphicon glyphicon-user pull-right"></span></a>
+                                      <ul class="dropdown-menu" id="{{rub.id}}">
+                                        
+                                      </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                                <br>
+                            {% endfor %}
+                                <br><br>
+  
+
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </form>
+            </nav>
+        </div>
+
+        
+        {% endblock %}    
+        
